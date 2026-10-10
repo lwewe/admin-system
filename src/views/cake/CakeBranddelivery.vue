@@ -203,7 +203,8 @@ export default {
     loadBaiduMapAPI() {
       if (window.BMap) return
       const script = document.createElement('script')
-      script.src = 'https://api.map.baidu.com/api?v=3.0&ak=GUUm4Np0bb3wQvzyS2PSoj8IV2xSbAnw&callback=onBMapCallback'
+
+      script.src = 'https://api.map.baidu.com/api?v=3.0&ak=b3nPqKCpAtoSG03oDXu2FjuIUFvWOn9C&callback=onBMapCallback'
       script.async = true
       window.onBMapCallback = () => {
         console.log('百度地图加载完成')
