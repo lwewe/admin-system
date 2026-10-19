@@ -96,6 +96,21 @@
           </el-radio-group>
         </el-form-item>
 
+        <!-- 限时抢购 -->
+        <el-form-item label="限时抢购：">
+          <el-select v-model="productForm.qianggou" placeholder="请选择" style="width: 150px;"
+            @change="handleQianggouChange">
+            <el-option label="未抢购" value="0"></el-option>
+            <el-option label="抢购" value="1"></el-option>
+          </el-select>
+
+          <el-input v-if="productForm.qianggou == '1'" v-model="productForm.qianggou_price" placeholder="0"
+            type="number" style="width: 200px; margin-left: 10px;">
+          </el-input>
+          <span v-if="productForm.qianggou == '1'" style="color: red; margin-left: 10px; font-size: 12px;">
+            抢购增加价格,下单为商品市场价.
+          </span>
+        </el-form-item>
         <!-- 商品产地 -->
         <el-form-item label="商品产地：">
           <el-input v-model="productForm.productplace" placeholder="商品产地" style="width: 500px;"></el-input>
@@ -219,7 +234,7 @@ export default {
   },
   data() {
     return {
- isadmin: localStorage.getItem('is_super_admin'),
+      isadmin: localStorage.getItem('is_super_admin'),
       // data 中新增
       isEdit: false,  // 是否编辑模式
       editId: '',     // 编辑的产品ID
@@ -257,7 +272,9 @@ export default {
         jingxuan: 0,
         sh: 0,
         createtime: '',
-        imgs: ''
+        imgs: '',
+        qianggou: '0',
+        qianggou_price: '0',
       },
 
       // 验证规则
@@ -302,6 +319,12 @@ export default {
     // this.editor = null
   },
   methods: {
+    // 切换限时抢购状态
+    handleQianggouChange(val) {
+      if (val === '0') {
+        this.productForm.qianggou_price = '0';
+      }
+    },
     // ProductList
     goBack() {
       this.$router.push({ name: 'ProductList' })
@@ -689,6 +712,8 @@ export default {
             jingxuan: data.jingxuan || 0,
             sh: data.sh || 1,
             createtime: data.createtime ? this.formatTimestamp(data.createtime) : '',
+            qianggou: data.qianggou !== undefined && data.qianggou !== null ? String(data.qianggou) : '0',
+            qianggou_price: data.qianggou_price !== undefined && data.qianggou_price !== null ? String(data.qianggou_price) : '0',
             specs: data.list_xinghao && data.list_xinghao.length > 0
               ? data.list_xinghao.map(item => ({
                 id: item.id,
@@ -845,8 +870,8 @@ export default {
             hot: this.productForm.hot,
             jingxuan: this.productForm.jingxuan,
             sh: this.productForm.sh,
-            qianggou: 0,
-            qianggou_price: 0
+            qianggou: this.productForm.qianggou || '0',
+            qianggou_price: this.productForm.qianggou_price || '0'
           }
 
           // ✅ 过滤空值时保留 imgs 和 wcontent
@@ -947,7 +972,7 @@ export default {
       .avatar-uploader {
         :deep(.el-upload) {
 
-       //   border: 1px dashed #d9d9d9;
+          //   border: 1px dashed #d9d9d9;
           border-radius: 6px;
           cursor: pointer;
           position: relative;
